@@ -1,4 +1,4 @@
 var chai = require('chai');
 
-GLOBAL.AssertionError = chai.AssertionError;
-GLOBAL.expect = chai.expect;
+global.AssertionError = chai.AssertionError;
+global.expect = chai.expect;
