@@ -1,0 +1,6 @@
+--ui bdd
+--reporter spec
+-r test/helpers/setup
+--recursive
+-w
+-G
