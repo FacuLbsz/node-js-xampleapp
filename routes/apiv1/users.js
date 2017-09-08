@@ -13,12 +13,28 @@ router.get('/', function (req, res, next) {
     User.find().exec(function (err, find) {
         if (err) {
             console.log(err)
-            next(err);
+            return next(err);
         }
         var get = { ok: true, list: find };
         res.json(get);
     })
 });
+
+
+/**
+ * GET: obtener usuario por id
+ */
+router.get("/:id", function (req, res, next) {
+    User.findById(req.params.id).exec(function (err, findById) {
+
+        if (err) {
+            return next(err)
+        }
+        var get = { ok: true, user: findById };
+        res.json(get);
+    })
+})
+
 
 /**
  * POST: Crear usuario {
