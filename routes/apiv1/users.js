@@ -1,11 +1,8 @@
 
 var express = require('express');
-var mongoose = require("mongoose");
-
-var User = mongoose.model('User');
 var router = express.Router();
 
-
+var userService = require("../../services/userService");
 
 /**
  * POST: Crear usuario {
@@ -15,13 +12,11 @@ var router = express.Router();
     }
  */
 router.post('/', function (req, res, next) {
-    var user = User(req.body);
-    User.create(user, function (err, create) {
-        if (err) {
-            return next(err)
-        }
-        var post = { ok: true, user: create };
-        res.json(post);
+    userService.create(req.body).then(function (resolve) {
+        var create = { ok: true, user: resolve };
+        res.json(create);
+    }).catch(function (reject) {
+        return next(reject)
     })
 })
 
@@ -29,12 +24,11 @@ router.post('/', function (req, res, next) {
  * GET: obtener una lista de usuarios
  */
 router.get('/', function (req, res, next) {
-    User.find().exec(function (err, find) {
-        if (err) {
-            return next(err);
-        }
-        var get = { ok: true, users: find };
-        res.json(get);
+    userService.getAll().then(function (resolve) {
+        var getAll = { ok: true, users: resolve };
+        res.json(getAll);
+    }).catch(function (reject) {
+        return next(reject)
     })
 });
 
@@ -43,13 +37,11 @@ router.get('/', function (req, res, next) {
  * GET: obtener un usuario por id
  */
 router.get("/:id", function (req, res, next) {
-    User.findById(req.params.id).exec(function (err, findById) {
-
-        if (err) {
-            return next(err)
-        }
-        var get = { ok: true, user: findById };
-        res.json(get);
+    userService.getById(req.params.id).then(function (resolve) {
+        var getById = { ok: true, user: resolve };
+        res.json(getById);
+    }).catch(function (reject) {
+        return next(reject)
     })
 })
 
@@ -58,16 +50,11 @@ router.get("/:id", function (req, res, next) {
  * PUT: actualizar un usuario por id
  */
 router.put("/:id", function (req, res, next) {
-
-    User.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true }, function (err, findByIdAndUpdate) {
-
-        if (err) {
-            return next(err);
-        }
-
-        var put = { ok: findByIdAndUpdate != null, user: findByIdAndUpdate };
-
+    userService.updateById(req.params.id, req.body).then(function (resolve) {
+        var put = { ok: resolve != null, user: resolve };
         res.json(put);
+    }).catch(function (reject) {
+        return next(reject)
     })
 
 })
@@ -75,15 +62,13 @@ router.put("/:id", function (req, res, next) {
 /**
  * DELETE: eliminar un usuario por id
  */
-router.delete("/:id",function(req,res,next){
-
-User.findByIdAndRemove(req.params.id,function(err, findByIdAndRemove){
-
-    var result = {ok: findByIdAndRemove!=null, user: findByIdAndRemove};
-    res.json(result);
-})
-
-
+router.delete("/:id", function (req, res, next) {
+    userService.deleteById(req.params.id).then(function (resolve) {
+        var result = { ok: resolve != null, user: resolve };
+        res.json(result);
+    }).catch(function (reject) {
+        return next(reject)
+    })
 })
 
 module.exports = router;
