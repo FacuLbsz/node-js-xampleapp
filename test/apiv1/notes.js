@@ -2,6 +2,8 @@ var async = require('async');
 var request = require('supertest');
 request = request("http://localhost:3000");
 
+var _ = require('lodash');
+
 var API_NOTES_PATH = '/apiv1/notes/';
 
 
@@ -127,6 +129,15 @@ describe("recurso /apiv1/notes", function () {
                 function assertions(res, cb) {
                     var body = res.body;
                     expect(body).to.have.property('ok', true);
+                    expect(body).to.have.property('notes');
+
+                    var notes = body.notes;
+                    var note1 = _.find(notes, { _id: postNote._id });
+
+                    expect(note1).to.have.property('title', 'titulo');
+                    expect(note1).to.have.property('body', 'body');
+                    expect(note1).to.have.property('_id');
+
                     done();
                 },
                 done

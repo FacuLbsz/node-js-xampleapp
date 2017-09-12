@@ -2,6 +2,8 @@ var async = require('async');
 var request = require('supertest');
 request = request("http://localhost:3000");
 
+var _ = require('lodash');
+
 var API_USERS_PATH = "/apiv1/users/";
 
 describe("recurso usuarios /apiv1/users", function () {
@@ -106,6 +108,14 @@ describe("recurso usuarios /apiv1/users", function () {
                     var body = res.body;
                     expect(body).to.have.property("ok", true);
                     expect(body).to.have.property("users");
+
+                    var users = body.users;
+
+                    var user1 = _.find(users, { _id: user._id })
+
+                    expect(user1).to.have.property("user")
+                    expect(user1).to.have.property("forename")
+                    expect(user1).to.have.property("password")
 
                     done()
 
