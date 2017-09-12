@@ -1,46 +1,50 @@
+var async = require('async');
 var request = require('supertest');
-
-var host = process.env.API_TEST_HOST;
+request = request("http://localhost:3000");
 
 var API_USERS_PATH = "/apiv1/users/";
 
-request = request("http://localhost:3000");
-
 describe("recurso usuarios /apiv1/users", function () {
 
-    
+
     var user = {};
     var token = {};
 
     before(function (done) {
-        
-                var userToLogin = {
-                    user: "user",
-                    password: "password"
-                }
-        
+
+        var userToLogin = {
+            user: "user",
+            password: "password"
+        }
+
+        async.waterfall([
+            function login(cb) {
                 request
                     .post("/login")
                     .send(userToLogin)
-                    .end(function (err, res) {
-        
-                        user._id = res.body.userId;
-                        token = res.body.token;
-        
-                        request
-                            .get("/apiv1/users/" + user._id)
-                            .set("x-access-token", token)
-                            .end(function (err, res) {
-                                if (err) {
-                                    done(err)
-                                }
-        
-                                user = res.body.user;
-                                done()
-                            })
-                    })
-        
-            });
+                    .end(cb)
+            },
+            function getTokenAndUserId(res, cb) {
+                user._id = res.body.userId;
+                token = res.body.token;
+
+                request
+                    .get(API_USERS_PATH + user._id)
+                    .set("x-access-token", token)
+                    .end(cb)
+            },
+            function getUser(res, cb) {
+                user = res.body.user;
+                done();
+            },
+            done
+        ],
+            function (err, res) {
+                if (err) {
+                    done(err)
+                }
+            })
+    });
 
     describe("POST", function () {
 
@@ -52,38 +56,37 @@ describe("recurso usuarios /apiv1/users", function () {
                 forename: "forename"
             }
 
-            request
-                .post(API_USERS_PATH)
-                .set("x-access-token", token)
-                .send(userToPost)
-                .end(function (err, res) {
-
-                    if (err) {
-                        done(err);
-                    }
-
+            async.waterfall([
+                function createUser(cb) {
+                    request
+                        .post(API_USERS_PATH)
+                        .set("x-access-token", token)
+                        .send(userToPost)
+                        .end(cb);
+                },
+                function assertions(res, cb) {
                     var body = res.body;
 
-                    try {
 
-                        expect(body).to.have.property("ok", true);
-                        expect(body).to.have.property("user");
+                    expect(body).to.have.property("ok", true);
+                    expect(body).to.have.property("user");
 
-                        user = body.user;
+                    user = body.user;
 
-                        expect(user).to.have.property("user", "user")
-                        expect(user).to.have.property("forename", "forename")
-                        expect(user).to.have.property("password", "password")
-                        expect(user).to.have.property("_id")
+                    expect(user).to.have.property("user", "user")
+                    expect(user).to.have.property("forename", "forename")
+                    expect(user).to.have.property("password", "password")
+                    expect(user).to.have.property("_id")
 
-                        done()
-                    } catch (e) {
-                        done(e)
+                    done()
+                },
+                done
+            ],
+                function (err, res) {
+                    if (err) {
+                        done(err)
                     }
-
                 })
-
-
         })
     })
 
@@ -92,65 +95,60 @@ describe("recurso usuarios /apiv1/users", function () {
 
         it("Obtener una lista de usuarios", function (done) {
 
-            request
-                .get(API_USERS_PATH)
-                .set("x-access-token", token)
-                .end(function (err, res) {
+            async.waterfall([
+                function getAllUsers(cb) {
+                    request
+                        .get(API_USERS_PATH)
+                        .set("x-access-token", token)
+                        .end(cb)
+                },
+                function assertions(res, cb) {
+                    var body = res.body;
+                    expect(body).to.have.property("ok", true);
+                    expect(body).to.have.property("users");
+
+                    done()
+
+                },
+                done
+            ],
+                function (err, res) {
                     if (err) {
                         done(err)
                     }
-
-                    try {
-                        var body = res.body;
-                        expect(body).to.have.property("ok", true);
-                        expect(body).to.have.property("users");
-
-                        done()
-
-                    } catch (e) {
-                        done(e)
-                    }
-
                 })
-
-
         })
 
         it("Obtener un usuario", function (done) {
 
-            request
-                .get(API_USERS_PATH + user._id)
-                .set("x-access-token", token)
-                .end(function (err, res) {
+            async.waterfall([
+                function getUser(cb) {
+                    request
+                        .get(API_USERS_PATH + user._id)
+                        .set("x-access-token", token)
+                        .end(cb)
+                },
+                function assertions(res, cb) {
+                    var body = res.body;
 
+                    expect(body).to.have.property("ok", true);
+                    expect(body).to.have.property("user");
+
+                    var userGet = body.user;
+
+                    expect(userGet).to.have.property("user", "user");
+                    expect(userGet).to.have.property("password", "password");
+                    expect(userGet).to.have.property("forename", "forename");
+                    expect(userGet).to.have.property("_id", user._id);
+
+                    done()
+                }
+            ],
+                function (err, res) {
                     if (err) {
                         done(err)
                     }
-
-                    try {
-
-                        var body = res.body;
-
-                        expect(body).to.have.property("ok", true);
-                        expect(body).to.have.property("user");
-
-                        var userGet = body.user;
-
-                        expect(userGet).to.have.property("user", "user");
-                        expect(userGet).to.have.property("password", "password");
-                        expect(userGet).to.have.property("forename", "forename");
-                        expect(userGet).to.have.property("_id", user._id);
-
-                        done()
-
-                    } catch (e) {
-                        done(e)
-                    }
-
-
                 })
-
-
         })
     })
 
@@ -164,33 +162,32 @@ describe("recurso usuarios /apiv1/users", function () {
                 forename: "forename updated",
             }
 
-            request
-                .put(API_USERS_PATH + user._id)
-                .set("x-access-token", token)
-                .send(userUpdated)
-                .end(function (err, res) {
+            async.waterfall([
+                function updateUser(cb) {
+                    request
+                        .put(API_USERS_PATH + user._id)
+                        .set("x-access-token", token)
+                        .send(userUpdated)
+                        .end(cb);
+                }
+                , function assertions(res, cb) {
+                    var body = res.body;
+                    expect(body).to.have.property("ok", true);
+                    expect(body).to.have.property("user");
 
+                    var userPut = body.user;
+
+                    expect(userPut).to.have.property("user", "user updated");
+                    expect(userPut).to.have.property("password", "password updated");
+                    expect(userPut).to.have.property("forename", "forename updated");
+                    expect(userPut).to.have.property("_id", user._id);
+
+                    done();
+                }
+            ],
+                function (err, res) {
                     if (err) {
-                        done(err);
-                    }
-
-                    try {
-
-                        var body = res.body;
-                        expect(body).to.have.property("ok", true);
-                        expect(body).to.have.property("user");
-
-                        var userPut = body.user;
-
-                        expect(userPut).to.have.property("user", "user updated");
-                        expect(userPut).to.have.property("password", "password updated");
-                        expect(userPut).to.have.property("forename", "forename updated");
-                        expect(userPut).to.have.property("_id", user._id);
-
-                        done();
-
-                    } catch (e) {
-                        done(e);
+                        done(err)
                     }
                 })
         })
@@ -202,28 +199,29 @@ describe("recurso usuarios /apiv1/users", function () {
     describe("DELETE", function () {
 
         it("Eliminar un usuario", function (done) {
-            request
-                .delete(API_USERS_PATH + user._id)
-                .set("x-access-token", token)
-                .end(function (err, res) {
 
+            async.waterfall([
+                function deleteUser(cb) {
+                    request
+                        .delete(API_USERS_PATH + user._id)
+                        .set("x-access-token", token)
+                        .end(cb);
+                },
+                function assertions(res, cb) {
+                    var body = res.body;
+                    expect(body).to.have.property("ok", true);
+                    expect(body).to.have.property("user");
+
+                    var userPut = body.user;
+                    expect(userPut).to.have.property("_id", user._id);
+
+                    done();
+                },
+                done
+            ],
+                function (err, res) {
                     if (err) {
-                        done(err);
-                    }
-
-                    try {
-
-                        var body = res.body;
-                        expect(body).to.have.property("ok", true);
-                        expect(body).to.have.property("user");
-
-                        var userPut = body.user;
-                        expect(userPut).to.have.property("_id", user._id);
-
-                        done();
-
-                    } catch (e) {
-                        done(e);
+                        done(err)
                     }
                 })
         })

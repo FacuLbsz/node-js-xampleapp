@@ -1,5 +1,8 @@
+var async = require('async');
 var request = require('supertest');
 request = request("http://localhost:3000");
+
+
 
 describe('recurso /auth', function () {
 
@@ -9,19 +12,20 @@ describe('recurso /auth', function () {
 
         it("Autentificar un usuario", function (done) {
 
+
             var user = {
                 user: "user",
                 password: "password"
             }
 
-            request
-                .post("/login")
-                .send(user)
-                .end(function (err, res) {
-
-                    if (err) {
-                        done(err);
-                    }
+            async.waterfall([
+                function login(cb) {
+                    request
+                        .post("/login")
+                        .send(user)
+                        .end(cb)
+                },
+                function assertions(res) {
 
                     var body = res.body;
                     expect(body).to.have.property("success", true);
@@ -31,9 +35,14 @@ describe('recurso /auth', function () {
 
                     token = body.token;
                     done();
+                },
+                done
+            ],
+                function (err, res) {
+                    if (err) {
+                        done(err);
+                    }
                 })
-
-
         })
     })
 
