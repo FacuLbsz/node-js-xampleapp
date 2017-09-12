@@ -7,7 +7,7 @@ var noteService = require('../../services/noteService')
  * POST: crear una nueva nota para un usuario
  */
 router.post('/', function (req, res, next) {
-
+    console.log(req.body)
     noteService.create(req.body)
         .then(function (resolve) {
             var result = { ok: true, note: resolve }

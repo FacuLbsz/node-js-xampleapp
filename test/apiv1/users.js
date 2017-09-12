@@ -8,7 +8,39 @@ request = request("http://localhost:3000");
 
 describe("recurso usuarios /apiv1/users", function () {
 
+    
     var user = {};
+    var token = {};
+
+    before(function (done) {
+        
+                var userToLogin = {
+                    user: "user",
+                    password: "password"
+                }
+        
+                request
+                    .post("/login")
+                    .send(userToLogin)
+                    .end(function (err, res) {
+        
+                        user._id = res.body.userId;
+                        token = res.body.token;
+        
+                        request
+                            .get("/apiv1/users/" + user._id)
+                            .set("x-access-token", token)
+                            .end(function (err, res) {
+                                if (err) {
+                                    done(err)
+                                }
+        
+                                user = res.body.user;
+                                done()
+                            })
+                    })
+        
+            });
 
     describe("POST", function () {
 
@@ -22,6 +54,7 @@ describe("recurso usuarios /apiv1/users", function () {
 
             request
                 .post(API_USERS_PATH)
+                .set("x-access-token", token)
                 .send(userToPost)
                 .end(function (err, res) {
 
@@ -61,6 +94,7 @@ describe("recurso usuarios /apiv1/users", function () {
 
             request
                 .get(API_USERS_PATH)
+                .set("x-access-token", token)
                 .end(function (err, res) {
                     if (err) {
                         done(err)
@@ -86,6 +120,7 @@ describe("recurso usuarios /apiv1/users", function () {
 
             request
                 .get(API_USERS_PATH + user._id)
+                .set("x-access-token", token)
                 .end(function (err, res) {
 
                     if (err) {
@@ -131,6 +166,7 @@ describe("recurso usuarios /apiv1/users", function () {
 
             request
                 .put(API_USERS_PATH + user._id)
+                .set("x-access-token", token)
                 .send(userUpdated)
                 .end(function (err, res) {
 
@@ -168,6 +204,7 @@ describe("recurso usuarios /apiv1/users", function () {
         it("Eliminar un usuario", function (done) {
             request
                 .delete(API_USERS_PATH + user._id)
+                .set("x-access-token", token)
                 .end(function (err, res) {
 
                     if (err) {

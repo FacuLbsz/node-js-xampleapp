@@ -39,8 +39,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', require('./routes/index'));
-//app.use('/', require('./routes/authenticate'));
-//app.use('/apiv1', require('./routes/apiv1/authenticator'));
+app.use('/', require('./routes/auth'));
+app.use('/apiv1', require('./routes/apiv1/authenticator'));
 app.use('/apiv1/users', require('./routes/apiv1/users'));
 app.use('/apiv1/notes', require('./routes/apiv1/notes'));
 

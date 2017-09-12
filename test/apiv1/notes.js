@@ -9,18 +9,37 @@ request = request("http://localhost:3000");
 describe("recurso /apiv1/notes", function () {
 
     var user = {};
+    var token = {}
     var postNote = {};
 
     before(function (done) {
-        request
-            .get("/apiv1/users/59ada73282c07425c0f9eb00")
-            .end(function (err, res) {
-                if (err)
-                    done(err)
 
-                user = res.body.user;
-                done()
+        var userToLogin = {
+            user: "user",
+            password: "password"
+        }
+
+        request
+            .post("/login")
+            .send(userToLogin)
+            .end(function (err, res) {
+
+                user._id = res.body.userId;
+                token = res.body.token;
+
+                request
+                    .get("/apiv1/users/" + user._id)
+                    .set("x-access-token", token)
+                    .end(function (err, res) {
+                        if (err) {
+                            done(err)
+                        }
+
+                        user = res.body.user;
+                        done()
+                    })
             })
+
     });
 
 
@@ -36,6 +55,7 @@ describe("recurso /apiv1/notes", function () {
 
             request
                 .post('/apiv1/notes/')
+                .set({ "x-access-token": token })
                 .send(note)
                 .end(function (err, res) {
                     if (err) {
@@ -66,6 +86,7 @@ describe("recurso /apiv1/notes", function () {
         it("Obtener nota por id", function (done) {
             request
                 .get("/apiv1/notes/" + postNote._id)
+                .set({ "x-access-token": token })
                 .end(function (err, res) {
                     if (err)
                         done(err)
@@ -89,7 +110,7 @@ describe("recurso /apiv1/notes", function () {
         it("Obtener notas", function (done) {
             request
                 .get('/apiv1/notes/')
-                .set('Accept', 'application/json')
+                .set({ "x-access-token": token })
                 .end(function (err, res) {
                     if (err) {
                         done(err);
@@ -110,6 +131,7 @@ describe("recurso /apiv1/notes", function () {
 
             request
                 .get('/apiv1/notes/user/' + user._id)
+                .set({ "x-access-token": token })
                 .end(function (err, res) {
                     if (err) {
                         done(err);
@@ -140,6 +162,7 @@ describe("recurso /apiv1/notes", function () {
 
             request
                 .put('/apiv1/notes/' + postNote._id)
+                .set({ "x-access-token": token })
                 .send(postNote)
                 .end(function (err, res) {
 
@@ -169,6 +192,7 @@ describe("recurso /apiv1/notes", function () {
 
             request
                 .put("/apiv1/notes/" + "59ada73282c07425c0f9eb00")
+                .set({ "x-access-token": token })
                 .end(function (err, res) {
                     var body = res.body;
                     try {
@@ -190,6 +214,7 @@ describe("recurso /apiv1/notes", function () {
 
             request
                 .delete("/apiv1/notes/" + postNote._id)
+                .set({ "x-access-token": token })
                 .end(function (err, res) {
 
                     if (err) {
@@ -202,6 +227,7 @@ describe("recurso /apiv1/notes", function () {
 
                         request
                             .get("/apiv1/notes/" + postNote._id)
+                            .set({ "x-access-token": token })
                             .end(function (err, res) {
                                 if (err) {
                                     done(err)
@@ -225,6 +251,7 @@ describe("recurso /apiv1/notes", function () {
 
             request
                 .delete("/apiv1/notes/" + postNote._id)
+                .set({ "x-access-token": token })
                 .end(function (err, res) {
                     var body = res.body;
                     try {
