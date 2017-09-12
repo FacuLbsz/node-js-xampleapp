@@ -1,5 +1,5 @@
-var mongoose = require('mongoose');
-var Note = mongoose.model('Note');
+var mongoose = require("mongoose");
+var Note = mongoose.model("Note");
 
 var noteService = {
 
@@ -13,18 +13,18 @@ var noteService = {
                     return reject(err);
                 }
                 return resolve(create);
-            })
-        })
+            });
+        });
     },
     getById: function (id) {
         return new Promise(function (resolve, reject) {
             Note.findById(id).exec(function (err, findById) {
                 if (err) {
-                    return reject(err)
+                    return reject(err);
                 }
                 return resolve(findById);
-            })
-        })
+            });
+        });
     },
     getAll: function () {
         return new Promise(function (resolve, reject) {
@@ -34,17 +34,17 @@ var noteService = {
                 }
                 return resolve(find);
             });
-        })
+        });
     },
     getByUserId: function (userId) {
         return new Promise(function (resolve, reject) {
-            Note.find({ 'posted.postedBy': userId }).exec(function (err, get) {
+            Note.find({ "posted.postedBy": userId }).exec(function (err, get) {
                 if (err) {
-                    return reject(err)
+                    return reject(err);
                 }
-                return resolve(get)
-            })
-        })
+                return resolve(get);
+            });
+        });
     },
     updateById: function (id, note) {
         return new Promise(function (resolve, reject) {
@@ -53,8 +53,8 @@ var noteService = {
                     return reject(err);
                 }
                 return resolve(findByIdAndUpdate);
-            })
-        })
+            });
+        });
     },
     deleteById: function (id) {
         return new Promise(function (resolve, reject) {
@@ -63,11 +63,11 @@ var noteService = {
                     return reject(err);
                 }
                 return resolve(findByIdAndRemove);
-            })
-        })
+            });
+        });
     }
 
 
-}
+};
 
 module.exports = noteService;

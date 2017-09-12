@@ -1,5 +1,5 @@
 
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
 var userService = require("../../services/userService");
@@ -11,25 +11,25 @@ var userService = require("../../services/userService");
     password: String
     }
  */
-router.post('/', function (req, res, next) {
+router.post("/", function (req, res, next) {
     userService.create(req.body).then(function (resolve) {
         var create = { ok: true, user: resolve };
         res.json(create);
     }).catch(function (reject) {
-        return next(reject)
-    })
-})
+        return next(reject);
+    });
+});
 
 /**
  * GET: obtener una lista de usuarios
  */
-router.get('/', function (req, res, next) {
+router.get("/", function (req, res, next) {
     userService.getAll().then(function (resolve) {
         var getAll = { ok: true, users: resolve };
         res.json(getAll);
     }).catch(function (reject) {
-        return next(reject)
-    })
+        return next(reject);
+    });
 });
 
 
@@ -41,9 +41,9 @@ router.get("/:id", function (req, res, next) {
         var getById = { ok: true, user: resolve };
         res.json(getById);
     }).catch(function (reject) {
-        return next(reject)
-    })
-})
+        return next(reject);
+    });
+});
 
 
 /**
@@ -54,10 +54,10 @@ router.put("/:id", function (req, res, next) {
         var put = { ok: resolve != null, user: resolve };
         res.json(put);
     }).catch(function (reject) {
-        return next(reject)
-    })
+        return next(reject);
+    });
 
-})
+});
 
 /**
  * DELETE: eliminar un usuario por id
@@ -67,9 +67,9 @@ router.delete("/:id", function (req, res, next) {
         var result = { ok: resolve != null, user: resolve };
         res.json(result);
     }).catch(function (reject) {
-        return next(reject)
-    })
-})
+        return next(reject);
+    });
+});
 
 module.exports = router;
 

@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+var mongoose = require("mongoose");
 
 var Note = new mongoose.Schema({
 
@@ -7,10 +7,10 @@ var Note = new mongoose.Schema({
     posted: {
         postedBy: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
+            ref: "User"
         },
         date: Date
     }
 });
 
-mongoose.model('Note', Note);
+mongoose.model("Note", Note);

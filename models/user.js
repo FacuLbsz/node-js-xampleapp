@@ -1,6 +1,6 @@
-'use strict'
+"use strict";
 
-var mongoose = require('mongoose');
+var mongoose = require("mongoose");
 
 var User = new mongoose.Schema({
 
@@ -11,4 +11,4 @@ var User = new mongoose.Schema({
 });
 
 
-mongoose.model('User', User);
+mongoose.model("User", User);

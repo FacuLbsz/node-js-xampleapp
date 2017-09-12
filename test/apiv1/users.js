@@ -1,8 +1,8 @@
-var async = require('async');
-var request = require('supertest');
+var async = require("async");
+var request = require("supertest");
 request = request("http://localhost:3000");
 
-var _ = require('lodash');
+var _ = require("lodash");
 
 var API_USERS_PATH = "/apiv1/users/";
 
@@ -17,14 +17,14 @@ describe("recurso usuarios /apiv1/users", function () {
         var userToLogin = {
             user: "user",
             password: "password"
-        }
+        };
 
         async.waterfall([
             function login(cb) {
                 request
                     .post("/login")
                     .send(userToLogin)
-                    .end(cb)
+                    .end(cb);
             },
             function getTokenAndUserId(res, cb) {
                 user._id = res.body.userId;
@@ -33,19 +33,19 @@ describe("recurso usuarios /apiv1/users", function () {
                 request
                     .get(API_USERS_PATH + user._id)
                     .set("x-access-token", token)
-                    .end(cb)
+                    .end(cb);
             },
-            function getUser(res, cb) {
+            function getUser(res) {
                 user = res.body.user;
                 done();
             },
             done
         ],
-            function (err, res) {
-                if (err) {
-                    done(err)
-                }
-            })
+        function (err) {
+            if (err) {
+                done(err);
+            }
+        });
     });
 
     describe("POST", function () {
@@ -56,7 +56,7 @@ describe("recurso usuarios /apiv1/users", function () {
                 user: "user",
                 password: "password",
                 forename: "forename"
-            }
+            };
 
             async.waterfall([
                 function createUser(cb) {
@@ -66,7 +66,7 @@ describe("recurso usuarios /apiv1/users", function () {
                         .send(userToPost)
                         .end(cb);
                 },
-                function assertions(res, cb) {
+                function assertions(res) {
                     var body = res.body;
 
 
@@ -75,22 +75,22 @@ describe("recurso usuarios /apiv1/users", function () {
 
                     user = body.user;
 
-                    expect(user).to.have.property("user", "user")
-                    expect(user).to.have.property("forename", "forename")
-                    expect(user).to.have.property("password", "password")
-                    expect(user).to.have.property("_id")
+                    expect(user).to.have.property("user", "user");
+                    expect(user).to.have.property("forename", "forename");
+                    expect(user).to.have.property("password", "password");
+                    expect(user).to.have.property("_id");
 
-                    done()
+                    done();
                 },
                 done
             ],
-                function (err, res) {
-                    if (err) {
-                        done(err)
-                    }
-                })
-        })
-    })
+            function (err) {
+                if (err) {
+                    done(err);
+                }
+            });
+        });
+    });
 
     describe("GET", function () {
 
@@ -102,32 +102,32 @@ describe("recurso usuarios /apiv1/users", function () {
                     request
                         .get(API_USERS_PATH)
                         .set("x-access-token", token)
-                        .end(cb)
+                        .end(cb);
                 },
-                function assertions(res, cb) {
+                function assertions(res) {
                     var body = res.body;
                     expect(body).to.have.property("ok", true);
                     expect(body).to.have.property("users");
 
                     var users = body.users;
 
-                    var user1 = _.find(users, { _id: user._id })
+                    var user1 = _.find(users, { _id: user._id });
 
-                    expect(user1).to.have.property("user")
-                    expect(user1).to.have.property("forename")
-                    expect(user1).to.have.property("password")
+                    expect(user1).to.have.property("user");
+                    expect(user1).to.have.property("forename");
+                    expect(user1).to.have.property("password");
 
-                    done()
+                    done();
 
                 },
                 done
             ],
-                function (err, res) {
-                    if (err) {
-                        done(err)
-                    }
-                })
-        })
+            function (err) {
+                if (err) {
+                    done(err);
+                }
+            });
+        });
 
         it("Obtener un usuario", function (done) {
 
@@ -136,9 +136,9 @@ describe("recurso usuarios /apiv1/users", function () {
                     request
                         .get(API_USERS_PATH + user._id)
                         .set("x-access-token", token)
-                        .end(cb)
+                        .end(cb);
                 },
-                function assertions(res, cb) {
+                function assertions(res) {
                     var body = res.body;
 
                     expect(body).to.have.property("ok", true);
@@ -151,16 +151,16 @@ describe("recurso usuarios /apiv1/users", function () {
                     expect(userGet).to.have.property("forename", "forename");
                     expect(userGet).to.have.property("_id", user._id);
 
-                    done()
+                    done();
                 }
             ],
-                function (err, res) {
-                    if (err) {
-                        done(err)
-                    }
-                })
-        })
-    })
+            function (err) {
+                if (err) {
+                    done(err);
+                }
+            });
+        });
+    });
 
     describe("PUT", function () {
 
@@ -170,7 +170,7 @@ describe("recurso usuarios /apiv1/users", function () {
                 user: "user updated",
                 password: "password updated",
                 forename: "forename updated",
-            }
+            };
 
             async.waterfall([
                 function updateUser(cb) {
@@ -180,7 +180,7 @@ describe("recurso usuarios /apiv1/users", function () {
                         .send(userUpdated)
                         .end(cb);
                 }
-                , function assertions(res, cb) {
+                , function assertions(res) {
                     var body = res.body;
                     expect(body).to.have.property("ok", true);
                     expect(body).to.have.property("user");
@@ -195,15 +195,15 @@ describe("recurso usuarios /apiv1/users", function () {
                     done();
                 }
             ],
-                function (err, res) {
-                    if (err) {
-                        done(err)
-                    }
-                })
-        })
+            function (err) {
+                if (err) {
+                    done(err);
+                }
+            });
+        });
 
 
-    })
+    });
 
 
     describe("DELETE", function () {
@@ -217,7 +217,7 @@ describe("recurso usuarios /apiv1/users", function () {
                         .set("x-access-token", token)
                         .end(cb);
                 },
-                function assertions(res, cb) {
+                function assertions(res) {
                     var body = res.body;
                     expect(body).to.have.property("ok", true);
                     expect(body).to.have.property("user");
@@ -229,12 +229,12 @@ describe("recurso usuarios /apiv1/users", function () {
                 },
                 done
             ],
-                function (err, res) {
-                    if (err) {
-                        done(err)
-                    }
-                })
-        })
-    })
+            function (err) {
+                if (err) {
+                    done(err);
+                }
+            });
+        });
+    });
 
-})
+});

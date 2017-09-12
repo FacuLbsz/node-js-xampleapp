@@ -1,10 +1,10 @@
-var async = require('async');
-var request = require('supertest');
+var async = require("async");
+var request = require("supertest");
 request = request("http://localhost:3000");
 
 
 
-describe('recurso /auth', function () {
+describe("recurso /auth", function () {
 
     var token = {};
 
@@ -16,14 +16,14 @@ describe('recurso /auth', function () {
             var user = {
                 user: "user",
                 password: "password"
-            }
+            };
 
             async.waterfall([
                 function login(cb) {
                     request
                         .post("/login")
                         .send(user)
-                        .end(cb)
+                        .end(cb);
                 },
                 function assertions(res) {
 
@@ -37,14 +37,13 @@ describe('recurso /auth', function () {
                     done();
                 },
                 done
-            ],
-                function (err, res) {
-                    if (err) {
-                        done(err);
-                    }
-                })
-        })
-    })
+            ], function (err) {
+                if (err) {
+                    done(err);
+                }
+            });
+        });
+    });
 
 
-})
+});

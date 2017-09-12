@@ -1,8 +1,8 @@
-var express = require('express');
+var express = require("express");
 var mongoose = require("mongoose");
-var User = mongoose.model('User');
+var User = mongoose.model("User");
 
-var jwt = require('jsonwebtoken');
+var jwt = require("jsonwebtoken");
 
 var userService = {
     create: function (user) {
@@ -13,8 +13,8 @@ var userService = {
                     return reject(err);
                 }
                 return resolve(create);
-            })
-        })
+            });
+        });
     },
     getAll: function () {
         return new Promise(function (resolve, reject) {
@@ -24,17 +24,17 @@ var userService = {
                 }
                 return resolve(find);
             });
-        })
+        });
     },
     getById: function (id) {
         return new Promise(function (resolve, reject) {
             User.findById(id).exec(function (err, findById) {
                 if (err) {
-                    return reject(err)
+                    return reject(err);
                 }
                 return resolve(findById);
-            })
-        })
+            });
+        });
     },
     updateById: function (id, user) {
         return new Promise(function (resolve, reject) {
@@ -43,8 +43,8 @@ var userService = {
                     return reject(err);
                 }
                 return resolve(findByIdAndUpdate);
-            })
-        })
+            });
+        });
     },
     deleteById: function (id) {
         return new Promise(function (resolve, reject) {
@@ -53,8 +53,8 @@ var userService = {
                     return reject(err);
                 }
                 return resolve(findByIdAndRemove);
-            })
-        })
+            });
+        });
     },
     login: function (userToFind) {
 
@@ -96,5 +96,5 @@ var userService = {
             });
         });
     }
-}
+};
 module.exports = userService;

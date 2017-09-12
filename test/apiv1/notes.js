@@ -1,16 +1,16 @@
-var async = require('async');
-var request = require('supertest');
+var async = require("async");
+var request = require("supertest");
 request = request("http://localhost:3000");
 
-var _ = require('lodash');
+var _ = require("lodash");
 
-var API_NOTES_PATH = '/apiv1/notes/';
+var API_NOTES_PATH = "/apiv1/notes/";
 
 
 describe("recurso /apiv1/notes", function () {
 
     var user = {};
-    var token = {}
+    var token = {};
     var postNote = {};
 
     before(function (done) {
@@ -18,14 +18,14 @@ describe("recurso /apiv1/notes", function () {
         var userToLogin = {
             user: "user",
             password: "password"
-        }
+        };
 
         async.waterfall([
             function login(cb) {
                 request
                     .post("/login")
                     .send(userToLogin)
-                    .end(cb)
+                    .end(cb);
             },
             function getTokenAndUserId(res, cb) {
                 user._id = res.body.userId;
@@ -34,19 +34,19 @@ describe("recurso /apiv1/notes", function () {
                 request
                     .get("/apiv1/users/" + user._id)
                     .set("x-access-token", token)
-                    .end(cb)
+                    .end(cb);
             },
-            function getUser(res, cb) {
+            function getUser(res) {
                 user = res.body.user;
                 done();
             },
             done
         ],
-            function (err, res) {
-                if (err) {
-                    done(err)
-                }
-            })
+        function (err) {
+            if (err) {
+                done(err);
+            }
+        });
     });
 
 
@@ -54,10 +54,10 @@ describe("recurso /apiv1/notes", function () {
         it("Añadir una nueva nota", function (done) {
 
             var note = {
-                title: 'titulo',
-                body: 'body',
+                title: "titulo",
+                body: "body",
                 user: user
-            }
+            };
 
             async.waterfall([
                 function createNote(cb) {
@@ -67,26 +67,26 @@ describe("recurso /apiv1/notes", function () {
                         .send(note)
                         .end(cb);
                 },
-                function assertions(res, cb) {
+                function assertions(res) {
                     var body = res.body;
-                    expect(body).to.have.property('ok', true);
+                    expect(body).to.have.property("ok", true);
 
                     postNote = body.note;
-                    expect(postNote).to.have.property('title', 'titulo');
-                    expect(postNote).to.have.property('body', 'body');
-                    expect(postNote).to.have.property('_id');
+                    expect(postNote).to.have.property("title", "titulo");
+                    expect(postNote).to.have.property("body", "body");
+                    expect(postNote).to.have.property("_id");
 
                     done();
                 },
                 done
             ],
-                function (err, res) {
-                    if (err) {
-                        done(err)
-                    }
-                })
-        })
-    })
+            function (err) {
+                if (err) {
+                    done(err);
+                }
+            });
+        });
+    });
 
     describe("GET", function () {
 
@@ -97,26 +97,26 @@ describe("recurso /apiv1/notes", function () {
                     request
                         .get("/apiv1/notes/" + postNote._id)
                         .set({ "x-access-token": token })
-                        .end(cb)
+                        .end(cb);
                 },
-                function assertions(res, cb) {
+                function assertions(res) {
                     var body = res.body;
-                    expect(body).to.have.property("ok", true)
-                    expect(body).to.have.property("note")
+                    expect(body).to.have.property("ok", true);
+                    expect(body).to.have.property("note");
 
                     var getNote = body.note;
                     expect(getNote).to.have.property("_id", postNote._id);
 
-                    done()
+                    done();
                 },
                 done
             ],
-                function (err, res) {
-                    if (err) {
-                        done(err)
-                    }
-                })
-        })
+            function (err) {
+                if (err) {
+                    done(err);
+                }
+            });
+        });
 
         it("Obtener notas", function (done) {
             async.waterfall([
@@ -124,29 +124,29 @@ describe("recurso /apiv1/notes", function () {
                     request
                         .get(API_NOTES_PATH)
                         .set({ "x-access-token": token })
-                        .end(cb)
+                        .end(cb);
                 },
-                function assertions(res, cb) {
+                function assertions(res) {
                     var body = res.body;
-                    expect(body).to.have.property('ok', true);
-                    expect(body).to.have.property('notes');
+                    expect(body).to.have.property("ok", true);
+                    expect(body).to.have.property("notes");
 
                     var notes = body.notes;
                     var note1 = _.find(notes, { _id: postNote._id });
 
-                    expect(note1).to.have.property('title', 'titulo');
-                    expect(note1).to.have.property('body', 'body');
-                    expect(note1).to.have.property('_id');
+                    expect(note1).to.have.property("title", "titulo");
+                    expect(note1).to.have.property("body", "body");
+                    expect(note1).to.have.property("_id");
 
                     done();
                 },
                 done
             ],
-                function (err, res) {
-                    if (err) {
-                        done(err)
-                    }
-                })
+            function (err) {
+                if (err) {
+                    done(err);
+                }
+            });
         });
 
 
@@ -154,13 +154,13 @@ describe("recurso /apiv1/notes", function () {
             async.waterfall([
                 function getNoteByUserId(cb) {
                     request
-                        .get('/apiv1/notes/user/' + user._id)
+                        .get("/apiv1/notes/user/" + user._id)
                         .set({ "x-access-token": token })
-                        .end(cb)
+                        .end(cb);
                 },
-                function assertions(res, cb) {
+                function assertions(res) {
                     var body = res.body;
-                    expect(body).to.have.property('ok', true);
+                    expect(body).to.have.property("ok", true);
 
                     var notes = body.notes;
                     expect(notes).to.have.lengthOf.above(1);
@@ -169,19 +169,19 @@ describe("recurso /apiv1/notes", function () {
                 },
                 done
             ],
-                function (err, res) {
-                    if (err) {
-                        done(err)
-                    }
-                });
+            function (err) {
+                if (err) {
+                    done(err);
+                }
+            });
         });
     });
 
     describe("PUT", function () {
 
         it("Actualizar una nota", function (done) {
-            postNote.title = "titulo update"
-            postNote.body = "cuerpo update"
+            postNote.title = "titulo update";
+            postNote.body = "cuerpo update";
 
             async.waterfall([
                 function updateNote(cb) {
@@ -191,27 +191,27 @@ describe("recurso /apiv1/notes", function () {
                         .send(postNote)
                         .end(cb);
                 },
-                function assertions(res, cb) {
+                function assertions(res) {
                     var body = res.body;
 
-                    expect(body).to.have.property("ok", true)
-                    expect(body).to.have.property("note")
+                    expect(body).to.have.property("ok", true);
+                    expect(body).to.have.property("note");
 
 
-                    var note = body.note
-                    expect(note).to.have.property("title", "titulo update")
-                    expect(note).to.have.property("body", "cuerpo update")
-                    expect(note).to.have.property("_id", postNote._id)
+                    var note = body.note;
+                    expect(note).to.have.property("title", "titulo update");
+                    expect(note).to.have.property("body", "cuerpo update");
+                    expect(note).to.have.property("_id", postNote._id);
                     done();
                 },
                 done
             ],
-                function (err, res) {
-                    if (err) {
-                        done(err)
-                    }
-                })
-        })
+            function (err) {
+                if (err) {
+                    done(err);
+                }
+            });
+        });
 
         it("Actualizar nota inexistente", function (done) {
 
@@ -222,21 +222,21 @@ describe("recurso /apiv1/notes", function () {
                         .set({ "x-access-token": token })
                         .end(cb);
                 },
-                function assertions(res, cb) {
+                function assertions(res) {
                     var body = res.body;
-                    expect(body).to.have.property("ok", false)
+                    expect(body).to.have.property("ok", false);
 
-                    done()
+                    done();
                 },
                 done
             ],
-                function (err, res) {
-                    if (err) {
-                        done(err)
-                    }
-                })
-        })
-    })
+            function (err) {
+                if (err) {
+                    done(err);
+                }
+            });
+        });
+    });
 
     describe("DELETE", function () {
 
@@ -258,21 +258,21 @@ describe("recurso /apiv1/notes", function () {
                         .set({ "x-access-token": token })
                         .end(cb);
                 },
-                function assertions(res, cb) {
-                    var body = res.body
+                function assertions(res) {
+                    var body = res.body;
 
-                    expect(body).to.have.property("ok", false)
-                    expect(body).to.have.property("note", null)
+                    expect(body).to.have.property("ok", false);
+                    expect(body).to.have.property("note", null);
 
-                    done()
+                    done();
                 },
                 done
-            ], function (err, res) {
+            ], function (err) {
                 if (err) {
-                    done(err)
+                    done(err);
                 }
-            })
-        })
+            });
+        });
 
         it("Eliminar nota inexistente", function (done) {
             async.waterfall([
@@ -280,20 +280,20 @@ describe("recurso /apiv1/notes", function () {
                     request
                         .delete("/apiv1/notes/" + postNote._id)
                         .set({ "x-access-token": token })
-                        .end(cb)
+                        .end(cb);
                 },
-                function assertions(res, cb) {
+                function assertions(res) {
                     var body = res.body;
-                    expect(body).to.have.property("ok", false)
+                    expect(body).to.have.property("ok", false);
 
-                    done()
+                    done();
                 }
-            ], function (err, res) {
+            ], function (err) {
                 if (err) {
-                    done(err)
+                    done(err);
                 }
-            })
-        })
-    })
+            });
+        });
+    });
 
 });
