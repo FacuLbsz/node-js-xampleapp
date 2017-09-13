@@ -1,80 +1,74 @@
 FORMAT: 1A
 HOST: http://polls.apiblueprint.org/
 
-# xampleapp
+# API xampleapp
+Api de notas para usuarios
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+## Metodos HTTP permitidos
 
-## Questions Collection [/questions]
+|  Método  |              Descripción               |
+| -------- | -------------------------------------- |
+| `GET`    | Obtener un recurso o lista de recursos |
+| `POST`   | Crear un recurso                       |
+| `PUT`    | Actualizar un recurso                  |
+| `DELETE` | Eliminar un recurso                    |
 
-### List All Questions [GET]
+## Códigos de Respuesta
+
+| Código |                         Descripción                          |
+| ------ | ------------------------------------------------------------ |
+| `200`  | Success                                                      |
+| `201`  | Success - nuevo recurso creado.                              |
+| `204`  | Success - no hay contenido para responder                    |
+| `400`  | Bad Request - i.e. su solicitud no se pudo evaluar           |
+| `401`  | Unauthorized - usuario no esta autenticado para este recurso |
+| `404`  | Not Found - recurso no existe                                |
+| `422`  | Unprocessable Entity - i.e. errores de validación            |
+| `429`  | Limite de uso excedido, intente mas tarde                    |
+| `500`  | Error de servidor                                            |
+| `503`  | Servicio no disponible                                       |
+
+# Auth service [/auth]
+
+## SignUp [/signup]
+
+### SignUp a new user [POST]
+
++ Request (application/json)
+
+        {
+            "user": "new user",
+            "password": "user password"
+        }
+
++ Response 201 (application/json)
+
+        [
+            {
+                "user": "new user",
+                "password": "user password",
+                "id": "user id"
+            }
+        ]
+
+## Login [/login]
+
+### Login a user [POST]
+
++ Request (application/json)
+
+        {
+            "user": "user",
+            "password": "password"
+        }
 
 + Response 200 (application/json)
 
         [
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
+                success: true,
+                message: "Enjoy your token!",
+                token: "token",
+                userId: "user id"
             }
         ]
-
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
-
-+ Request (application/json)
-
-        {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
-        }
-
-+ Response 201 (application/json)
-
-    + Headers
-
-            Location: /questions/2
-
-    + Body
-
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
-            }
