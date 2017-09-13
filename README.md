@@ -1,5 +1,6 @@
 # API xampleapp
 Api de notas para usuarios
+<br>https://xampleapp.herokuapp.com/
 
 ## Metodos HTTP permitidos
 
@@ -28,7 +29,7 @@ Api de notas para usuarios
 # Group Auth service
 Signup a user and login him to use all the resources in xampleapp-api.
 
-## SignUp [/auth/signup]
+## SignUp [/signup]
 
 ### SignUp a new user [POST]
 
@@ -51,7 +52,7 @@ Signup a user and login him to use all the resources in xampleapp-api.
             }
         ]
 
-## Login [/auth/login]
+## Login [/login]
 
 ### Login a user [POST]
 
