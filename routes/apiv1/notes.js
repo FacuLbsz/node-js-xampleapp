@@ -10,7 +10,7 @@ router.post("/", function (req, res, next) {
     noteService.create(req.body)
         .then(function (resolve) {
             var result = { ok: true, note: resolve };
-            res.json(result);
+            res.status(201).json(result);
         })
         .catch(function (reject) {
             return next(reject);
@@ -25,7 +25,7 @@ router.get("/:id", function (req, res, next) {
     noteService.getById(req.params.id)
         .then(function (resolve) {
             var result = { ok: resolve != null, note: resolve };
-            res.json(result);
+            res.status(200).json(result);
         })
         .catch(function (reject) {
             return next(reject);
@@ -39,7 +39,7 @@ router.get("/", function (req, res, next) {
     noteService.getAll()
         .then(function (resolve) {
             var result = { ok: true, notes: resolve };
-            res.json(result);
+            res.status(200).json(result);
         })
         .catch(function (reject) {
             return next(reject);
@@ -53,7 +53,7 @@ router.get("/user/:id", function (req, res, next) {
     noteService.getByUserId(req.params.id)
         .then(function(resolve){
             var result = { ok: true, notes: resolve };
-            res.json(result);
+            res.status(200).json(result);
         })
         .catch(function(reject){
             return next(reject);
@@ -66,7 +66,7 @@ router.get("/user/:id", function (req, res, next) {
 router.put("/:id", function (req, res, next) {
     noteService.updateById(req.params.id, req.body).then(function (resolve) {
         var put = { ok: resolve != null, note: resolve };
-        res.json(put);
+        res.status(200).json(put);
     }).catch(function (reject) {
         return next(reject);
     });
@@ -78,7 +78,7 @@ router.put("/:id", function (req, res, next) {
 router.delete("/:id", function (req, res, next) {
     noteService.deleteById(req.params.id).then(function (resolve) {
         var result = { ok: resolve != null, note: resolve };
-        res.json(result);
+        res.status(200).json(result);
     }).catch(function (reject) {
         return next(reject);
     });

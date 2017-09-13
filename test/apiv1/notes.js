@@ -25,6 +25,7 @@ describe("recurso /apiv1/notes", function () {
                 request
                     .post("/login")
                     .send(userToLogin)
+                    .expect(200)
                     .end(cb);
             },
             function getTokenAndUserId(res, cb) {
@@ -34,6 +35,7 @@ describe("recurso /apiv1/notes", function () {
                 request
                     .get("/apiv1/users/" + user.id)
                     .set("x-access-token", token)
+                    .expect(200)
                     .end(cb);
             },
             function getUser(res) {
@@ -65,6 +67,7 @@ describe("recurso /apiv1/notes", function () {
                         .post(API_NOTES_PATH)
                         .set({ "x-access-token": token })
                         .send(note)
+                        .expect(201)
                         .end(cb);
                 },
                 function assertions(res) {
@@ -97,6 +100,7 @@ describe("recurso /apiv1/notes", function () {
                     request
                         .get("/apiv1/notes/" + postNote.id)
                         .set({ "x-access-token": token })
+                        .expect(200)
                         .end(cb);
                 },
                 function assertions(res) {
@@ -124,6 +128,7 @@ describe("recurso /apiv1/notes", function () {
                     request
                         .get(API_NOTES_PATH)
                         .set({ "x-access-token": token })
+                        .expect(200)
                         .end(cb);
                 },
                 function assertions(res) {
@@ -156,6 +161,7 @@ describe("recurso /apiv1/notes", function () {
                     request
                         .get("/apiv1/notes/user/" + user.id)
                         .set({ "x-access-token": token })
+                        .expect(200)
                         .end(cb);
                 },
                 function assertions(res) {
@@ -189,6 +195,7 @@ describe("recurso /apiv1/notes", function () {
                         .put(API_NOTES_PATH + postNote.id)
                         .set({ "x-access-token": token })
                         .send(postNote)
+                        .expect(200)
                         .end(cb);
                 },
                 function assertions(res) {
@@ -220,6 +227,7 @@ describe("recurso /apiv1/notes", function () {
                     request
                         .put("/apiv1/notes/" + "59ada73282c07425c0f9eb00")
                         .set({ "x-access-token": token })
+                        .expect(200)
                         .end(cb);
                 },
                 function assertions(res) {
@@ -247,6 +255,7 @@ describe("recurso /apiv1/notes", function () {
                     request
                         .delete("/apiv1/notes/" + postNote.id)
                         .set({ "x-access-token": token })
+                        .expect(200)
                         .end(cb);
                 },
                 function getDeletedNote(res, cb) {
@@ -256,6 +265,7 @@ describe("recurso /apiv1/notes", function () {
                     request
                         .get("/apiv1/notes/" + postNote.id)
                         .set({ "x-access-token": token })
+                        .expect(200)
                         .end(cb);
                 },
                 function assertions(res) {
@@ -280,6 +290,7 @@ describe("recurso /apiv1/notes", function () {
                     request
                         .delete("/apiv1/notes/" + postNote.id)
                         .set({ "x-access-token": token })
+                        .expect(200)
                         .end(cb);
                 },
                 function assertions(res) {

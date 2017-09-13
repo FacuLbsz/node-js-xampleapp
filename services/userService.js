@@ -1,4 +1,3 @@
-var express = require("express");
 var mongoose = require("mongoose");
 var User = mongoose.model("User");
 
@@ -80,7 +79,7 @@ var userService = {
 
                         // if user is found and password is right
                         // create a token
-                        var token = jwt.sign({ data: user }, express.secret, {
+                        var token = jwt.sign({ data: user }, process.env.JWT_SECRET, {
                             expiresIn: 1440 // expires in 24 hours
                         });
 

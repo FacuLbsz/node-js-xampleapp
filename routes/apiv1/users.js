@@ -14,7 +14,7 @@ var userService = require("../../services/userService");
 router.post("/", function (req, res, next) {
     userService.create(req.body).then(function (resolve) {
         var create = { ok: true, user: resolve };
-        res.json(create);
+        res.status(201).json(create);
     }).catch(function (reject) {
         return next(reject);
     });
@@ -26,7 +26,7 @@ router.post("/", function (req, res, next) {
 router.get("/", function (req, res, next) {
     userService.getAll().then(function (resolve) {
         var getAll = { ok: true, users: resolve };
-        res.json(getAll);
+        res.status(200).json(getAll);
     }).catch(function (reject) {
         return next(reject);
     });
@@ -39,7 +39,7 @@ router.get("/", function (req, res, next) {
 router.get("/:id", function (req, res, next) {
     userService.getById(req.params.id).then(function (resolve) {
         var getById = { ok: true, user: resolve };
-        res.json(getById);
+        res.status(200).json(getById);
     }).catch(function (reject) {
         return next(reject);
     });
@@ -52,7 +52,7 @@ router.get("/:id", function (req, res, next) {
 router.put("/:id", function (req, res, next) {
     userService.updateById(req.params.id, req.body).then(function (resolve) {
         var put = { ok: resolve != null, user: resolve };
-        res.json(put);
+        res.status(200).json(put);
     }).catch(function (reject) {
         return next(reject);
     });
@@ -65,7 +65,7 @@ router.put("/:id", function (req, res, next) {
 router.delete("/:id", function (req, res, next) {
     userService.deleteById(req.params.id).then(function (resolve) {
         var result = { ok: resolve != null, user: resolve };
-        res.json(result);
+        res.status(200).json(result);
     }).catch(function (reject) {
         return next(reject);
     });

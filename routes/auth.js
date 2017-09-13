@@ -11,7 +11,7 @@ router.post("/signup", function (req, res, next) {
 
     userService.create(user)
         .then(function (resolve) {
-            res.json(resolve);
+            res.status(201).json(resolve);
         })
         .catch(function (reject) {
             return next(reject);
@@ -30,7 +30,7 @@ router.post("/login", function (req, res, next) {
                     userId: resolve.userId
                 });
             }
-            res.json({ success: false, message: "Authentication failed. Wrong password." });
+            res.status(200).json({ success: false, message: "Authentication failed. Wrong password." });
         })
         .catch(function (reject) {
             return next(reject);

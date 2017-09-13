@@ -6,7 +6,8 @@ var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 var cors = require("cors");
 
-var config = require("./config");
+//Require configurable function
+require("./config")();
 
 // Require mongoose to connect Mongodb
 var mongoose = require("mongoose");
@@ -17,10 +18,9 @@ require("./models/note");
 
 // Use native Node promises
 mongoose.Promise = global.Promise;
-express.secret = config.secret;
 
 // connect to MongoDB
-mongoose.connect(config.database)
+mongoose.connect(process.env.DB_URI)
     .then(() => console.log("connection succesful"))
     .catch((err) => console.error(err));
 

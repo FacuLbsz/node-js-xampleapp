@@ -23,6 +23,7 @@ describe("recurso /auth", function () {
                     request
                         .post("/login")
                         .send(user)
+                        .expect(200)
                         .end(cb);
                 },
                 function assertions(res) {
