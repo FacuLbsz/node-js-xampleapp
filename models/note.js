@@ -13,4 +13,16 @@ var Note = new mongoose.Schema({
     }
 });
 
+Note.set("toJSON", {
+    transform: function (doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+
+        if (ret.posted.postedBy) {
+            delete ret.posted.postedBy.password;
+        }
+    }
+});
+
 mongoose.model("Note", Note);

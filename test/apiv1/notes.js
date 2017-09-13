@@ -28,11 +28,11 @@ describe("recurso /apiv1/notes", function () {
                     .end(cb);
             },
             function getTokenAndUserId(res, cb) {
-                user._id = res.body.userId;
+                user.id = res.body.userId;
                 token = res.body.token;
 
                 request
-                    .get("/apiv1/users/" + user._id)
+                    .get("/apiv1/users/" + user.id)
                     .set("x-access-token", token)
                     .end(cb);
             },
@@ -74,7 +74,7 @@ describe("recurso /apiv1/notes", function () {
                     postNote = body.note;
                     expect(postNote).to.have.property("title", "titulo");
                     expect(postNote).to.have.property("body", "body");
-                    expect(postNote).to.have.property("_id");
+                    expect(postNote).to.have.property("id");
 
                     done();
                 },
@@ -95,7 +95,7 @@ describe("recurso /apiv1/notes", function () {
             async.waterfall([
                 function getNote(cb) {
                     request
-                        .get("/apiv1/notes/" + postNote._id)
+                        .get("/apiv1/notes/" + postNote.id)
                         .set({ "x-access-token": token })
                         .end(cb);
                 },
@@ -105,7 +105,7 @@ describe("recurso /apiv1/notes", function () {
                     expect(body).to.have.property("note");
 
                     var getNote = body.note;
-                    expect(getNote).to.have.property("_id", postNote._id);
+                    expect(getNote).to.have.property("id", postNote.id);
 
                     done();
                 },
@@ -132,11 +132,11 @@ describe("recurso /apiv1/notes", function () {
                     expect(body).to.have.property("notes");
 
                     var notes = body.notes;
-                    var note1 = _.find(notes, { _id: postNote._id });
+                    var note1 = _.find(notes, { id: postNote.id });
 
                     expect(note1).to.have.property("title", "titulo");
                     expect(note1).to.have.property("body", "body");
-                    expect(note1).to.have.property("_id");
+                    expect(note1).to.have.property("id");
 
                     done();
                 },
@@ -154,7 +154,7 @@ describe("recurso /apiv1/notes", function () {
             async.waterfall([
                 function getNoteByUserId(cb) {
                     request
-                        .get("/apiv1/notes/user/" + user._id)
+                        .get("/apiv1/notes/user/" + user.id)
                         .set({ "x-access-token": token })
                         .end(cb);
                 },
@@ -186,7 +186,7 @@ describe("recurso /apiv1/notes", function () {
             async.waterfall([
                 function updateNote(cb) {
                     request
-                        .put(API_NOTES_PATH + postNote._id)
+                        .put(API_NOTES_PATH + postNote.id)
                         .set({ "x-access-token": token })
                         .send(postNote)
                         .end(cb);
@@ -201,7 +201,7 @@ describe("recurso /apiv1/notes", function () {
                     var note = body.note;
                     expect(note).to.have.property("title", "titulo update");
                     expect(note).to.have.property("body", "cuerpo update");
-                    expect(note).to.have.property("_id", postNote._id);
+                    expect(note).to.have.property("id", postNote.id);
                     done();
                 },
                 done
@@ -245,7 +245,7 @@ describe("recurso /apiv1/notes", function () {
             async.waterfall([
                 function deleteNote(cb) {
                     request
-                        .delete("/apiv1/notes/" + postNote._id)
+                        .delete("/apiv1/notes/" + postNote.id)
                         .set({ "x-access-token": token })
                         .end(cb);
                 },
@@ -254,7 +254,7 @@ describe("recurso /apiv1/notes", function () {
                     expect(body).to.have.property("ok", true);
 
                     request
-                        .get("/apiv1/notes/" + postNote._id)
+                        .get("/apiv1/notes/" + postNote.id)
                         .set({ "x-access-token": token })
                         .end(cb);
                 },
@@ -278,7 +278,7 @@ describe("recurso /apiv1/notes", function () {
             async.waterfall([
                 function deleteNonExistNote(cb) {
                     request
-                        .delete("/apiv1/notes/" + postNote._id)
+                        .delete("/apiv1/notes/" + postNote.id)
                         .set({ "x-access-token": token })
                         .end(cb);
                 },

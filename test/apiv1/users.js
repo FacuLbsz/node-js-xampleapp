@@ -27,11 +27,11 @@ describe("recurso usuarios /apiv1/users", function () {
                     .end(cb);
             },
             function getTokenAndUserId(res, cb) {
-                user._id = res.body.userId;
+                user.id = res.body.userId;
                 token = res.body.token;
 
                 request
-                    .get(API_USERS_PATH + user._id)
+                    .get(API_USERS_PATH + user.id)
                     .set("x-access-token", token)
                     .end(cb);
             },
@@ -78,7 +78,7 @@ describe("recurso usuarios /apiv1/users", function () {
                     expect(user).to.have.property("user", "user");
                     expect(user).to.have.property("forename", "forename");
                     expect(user).to.have.property("password", "password");
-                    expect(user).to.have.property("_id");
+                    expect(user).to.have.property("id");
 
                     done();
                 },
@@ -111,7 +111,7 @@ describe("recurso usuarios /apiv1/users", function () {
 
                     var users = body.users;
 
-                    var user1 = _.find(users, { _id: user._id });
+                    var user1 = _.find(users, { id: user.id });
 
                     expect(user1).to.have.property("user");
                     expect(user1).to.have.property("forename");
@@ -134,7 +134,7 @@ describe("recurso usuarios /apiv1/users", function () {
             async.waterfall([
                 function getUser(cb) {
                     request
-                        .get(API_USERS_PATH + user._id)
+                        .get(API_USERS_PATH + user.id)
                         .set("x-access-token", token)
                         .end(cb);
                 },
@@ -149,7 +149,7 @@ describe("recurso usuarios /apiv1/users", function () {
                     expect(userGet).to.have.property("user", "user");
                     expect(userGet).to.have.property("password", "password");
                     expect(userGet).to.have.property("forename", "forename");
-                    expect(userGet).to.have.property("_id", user._id);
+                    expect(userGet).to.have.property("id", user.id);
 
                     done();
                 }
@@ -175,7 +175,7 @@ describe("recurso usuarios /apiv1/users", function () {
             async.waterfall([
                 function updateUser(cb) {
                     request
-                        .put(API_USERS_PATH + user._id)
+                        .put(API_USERS_PATH + user.id)
                         .set("x-access-token", token)
                         .send(userUpdated)
                         .end(cb);
@@ -190,7 +190,7 @@ describe("recurso usuarios /apiv1/users", function () {
                     expect(userPut).to.have.property("user", "user updated");
                     expect(userPut).to.have.property("password", "password updated");
                     expect(userPut).to.have.property("forename", "forename updated");
-                    expect(userPut).to.have.property("_id", user._id);
+                    expect(userPut).to.have.property("id", user.id);
 
                     done();
                 }
@@ -213,7 +213,7 @@ describe("recurso usuarios /apiv1/users", function () {
             async.waterfall([
                 function deleteUser(cb) {
                     request
-                        .delete(API_USERS_PATH + user._id)
+                        .delete(API_USERS_PATH + user.id)
                         .set("x-access-token", token)
                         .end(cb);
                 },
@@ -223,7 +223,7 @@ describe("recurso usuarios /apiv1/users", function () {
                     expect(body).to.have.property("user");
 
                     var userPut = body.user;
-                    expect(userPut).to.have.property("_id", user._id);
+                    expect(userPut).to.have.property("id", user.id);
 
                     done();
                 },

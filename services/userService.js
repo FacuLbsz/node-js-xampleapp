@@ -87,7 +87,7 @@ var userService = {
                         // return the information including token as JSON
                         return resolve({
                             token: token,
-                            userId: user._id
+                            userId: user.id
                         });
                     }
 
