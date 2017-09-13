@@ -1,6 +1,7 @@
 # API xampleapp
 Api de notas para usuarios
-<br>https://xampleapp.herokuapp.com/
+<br><strong>Demo: </strong> https://xampleapp.herokuapp.com/
+<br><strong>API Documentation: </strong> http://docs.xampleapp.apiary.io/
 
 ## Metodos HTTP permitidos
 
