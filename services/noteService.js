@@ -63,12 +63,10 @@ var noteService = {
         });
     },
     updateById: function (id, note) {
-        console.log("NOTE TO PUT: ", note);
         if (note.posted && note.posted.postedBy) {
             note.posted.postedBy._id = note.posted.postedBy.id;
             delete note.posted.postedBy.id;
         }
-        console.log("NOTE TO PUT updated: ", note);
         return new Promise(function (resolve, reject) {
             Note.findByIdAndUpdate(id, { $set: note }, { new: true }, function (err, findByIdAndUpdate) {
                 if (err) {

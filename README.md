@@ -1,6 +1,3 @@
-FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
-
 # API xampleapp
 Api de notas para usuarios
 
